@@ -11,11 +11,22 @@
 <body>
 
 <div id="app">
+ <component :is="currentTabComponent"
+            :student_id="student_id"
+            :tests="tests"
+            :test_id="test_id"
+            :test_title="test_title"
+            @create_student="create_student"
+            @change_component="change_component"
+            @change_test="change_test"
+ >
 
+ </component>
 
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.3"></script>
 <script src="JS\main.js"></script>
 </body>
 </html>

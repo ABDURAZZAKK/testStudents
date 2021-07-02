@@ -1,16 +1,13 @@
 package com.example.testStudent.controllers;
 
 import com.example.testStudent.Services.TestService;
-import com.example.testStudent.exceptions.NotFoundException;
 import com.example.testStudent.models.AnswersFromStudent;
-import com.example.testStudent.models.Queston;
+import com.example.testStudent.models.Question;
 import com.example.testStudent.models.Test;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("tests")
@@ -22,14 +19,18 @@ public class TestController {
         this.testService = testService;
     }
 
+
     @GetMapping
     public List<Test> listTests(){
+
+        System.out.print("size: ");
+
         return testService.findAllTests();
     }
 
 
     @GetMapping("{id}")
-    public List<Queston> getOneTest(@PathVariable Test test){
+    public List<Question> getOneTest(@PathVariable Test test){
         return testService.findOneTest(test);
     }
 

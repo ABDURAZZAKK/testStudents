@@ -16,7 +16,7 @@ public class AnswersFromStudent {
     private Test test;
 
     @ManyToMany
-    private List<Queston> questions;
+    private List<Question> questions;
 
     @ManyToMany
     private List<Answer> answers;
@@ -26,7 +26,7 @@ public class AnswersFromStudent {
     public AnswersFromStudent() {
     }
 
-    public AnswersFromStudent(Integer id, Student student, Test test, List<Queston> questions, List<Answer> answers, Double sumOfPoints) {
+    public AnswersFromStudent(Integer id, Student student, Test test, List<Question> questions, List<Answer> answers, Double sumOfPoints) {
         this.id = id;
         this.student = student;
         this.test = test;
@@ -59,11 +59,11 @@ public class AnswersFromStudent {
         this.test = test;
     }
 
-    public List<Queston> getQuestions() {
+    public List<Question> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<Queston> questions) {
+    public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
 

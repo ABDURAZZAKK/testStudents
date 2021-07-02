@@ -2,7 +2,7 @@ package com.example.testStudent.Services;
 
 import com.example.testStudent.models.Answer;
 import com.example.testStudent.models.AnswersFromStudent;
-import com.example.testStudent.models.Queston;
+import com.example.testStudent.models.Question;
 import com.example.testStudent.models.Test;
 import com.example.testStudent.repo.AnswerFromStudentRepo;
 import com.example.testStudent.repo.QuestionRepo;
@@ -26,11 +26,24 @@ public class TestService {
         this.answerFromStudentRepo = answerFromStudentRepo;
     }
 
+    public List<Question> ttt(){
+
+        Test test = testRepo.findById(1).get();
+
+
+        return questionRepo.findByTest(test);
+
+
+
+
+    }
+
+
     public List<Test> findAllTests(){
         return testRepo.findAll();
     }
 
-    public List<Queston> findOneTest(Test test){
+    public List<Question> findOneTest(Test test){
         return questionRepo.findByTest(test);
     }
 
@@ -38,7 +51,7 @@ public class TestService {
         Double result = 0d;
 
         Iterator<Answer> answers = answersFromStudent.getAnswers().listIterator();
-        for(Queston quest : answersFromStudent.getQuestions()){
+        for(Question quest : answersFromStudent.getQuestions()){
             if(questionRepo.findById(quest.getId()).equals(answers.next().getId())){
                 result++;
             }
@@ -50,7 +63,7 @@ public class TestService {
         Answer next;
 
         Iterator<Answer> answers = answersFromStudent.getAnswers().listIterator();
-        for(Queston quest : answersFromStudent.getQuestions()){
+        for(Question quest : answersFromStudent.getQuestions()){
             next = answers.next();
             if(questionRepo.findById(quest.getId()).equals(next.getId())){
                 result.add(next);

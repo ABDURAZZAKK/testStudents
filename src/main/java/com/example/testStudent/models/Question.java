@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Queston {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -15,7 +15,7 @@ public class Queston {
     private Test test;
 
     @OneToMany
-    @JoinColumn(nullable = false)
+    @JoinColumn
     private List<Answer> answers;
 
     @OneToOne
