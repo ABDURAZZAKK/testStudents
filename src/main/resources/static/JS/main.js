@@ -32,8 +32,6 @@ Vue.component("tests-list",{
     },
     methods:{
         open_test: function(event){
-            console.log(`event: ${event.target.id}`)
-            console.log(`event: ${event.target.name}`)
             this.$emit('change_test',{"id":event.target.id, "title":event.target.name})
             this.$emit('change_component','questions-list')
         }
@@ -44,23 +42,39 @@ Vue.component("tests-list",{
 
 
 Vue.component("questions-list",{
-    props: ["test_id", "test_title", "tests"],
+    data(){
+        return{
+            answers: {}
+        }
+    },
+    props: ["test_id", "test_title", "tests", 'payment'],
     template: `
                 <div>
                     <h1>{{test_title}}</h1>
                     <div v-for="quest in tests">
                         <h2>{{quest.text}}</h2>
+
                             <div v-for="answer in quest.answers">
-                                    <input type="radio" id="answer.id" name="quest.id">
-                                    <label for="answer.id"><span>{{answer.text}}</span></label>
+                                    <input type="radio" :id="answer.id" :name="quest.id" @change="add_answer">
+                                    <label :for="answer.id"><span>{{answer.text}}</span></label>
                             </div>
                     </div>
+                    <h2 v-if="payment !== null">Верно: {{payment.num_correct}} из {{payment.num_questions}}</h2>
+                    <button  v-if="payment === null" @click="give_answers">ЗАВЕРШИТЬ ТЕСТ</button>
+
                 </div>
     `,
     created: function(){
-        console.log(`get: ${this.test_id}`)
         testAPI.get({id: this.test_id},{title: this.test_title}).then(result => result.json())
-                                        .then(data => console.log(data))
+                                        .then(data => data.forEach(test => this.tests.push(test)))
+    },
+    methods: {
+        add_answer: function(event){
+            this.answers[event.target.name] = event.target.id
+        },
+        give_answers: function(){
+            this.$emit("scoring",this.answers)
+        }
     }
 
 })
@@ -72,7 +86,9 @@ var app = new Vue({
         student_id: null,
         tests: [],
         test_id: null,
-        test_title: null
+        test_title: null,
+        payment: null
+
     },
      computed: {
        currentTabComponent: function() {
@@ -84,24 +100,38 @@ var app = new Vue({
             name = document.getElementById('login').value
             studentAPI.save({},{"username":name})
                                                .then(result => result.json())
-                                               .then(data => {this.student_id = data.id
-                                                              console.log(this.student_id)
-                                               })
+                                               .then(data => this.student_id = data.id)
             this.change_component("tests-list")
 
        },
         change_test: function(test){
-            console.log(`test: ${test}`)
+
             this.test_id = test['id']
             this.test_title = test['title']
-            console.log(this.test_title)
-            console.log(this.test_id)
+
         },
         change_component: function(comp){
             this.tests = []
             this.selected_component = comp
 
+        },
+        scoring: function(answers_list){
+           var questions= [], answers=[]
+           for(i in answers_list){
+                questions.push({"id":i})
+                answers.push({"id":answers_list[i]})
+           }
+           testAPI.save({},{"student":{"id":this.student_id},
+                            "test":{"id":this.test_id},
+                            "questions": questions,
+                            "answers":answers}).then(result => result.json())
+                                                                    .then(data => {this.payment = {
+                                                                                            correct_list: data["list_of_correct_answers"],
+                                                                                            num_correct: data["num_of_correct_answers"],
+                                                                                            num_questions: data["num_of_questions_answered"]}
+                                                                    })
         }
+
 
     }
 

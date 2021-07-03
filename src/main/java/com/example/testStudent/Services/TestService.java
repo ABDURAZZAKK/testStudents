@@ -26,17 +26,7 @@ public class TestService {
         this.answerFromStudentRepo = answerFromStudentRepo;
     }
 
-    public List<Question> ttt(){
 
-        Test test = testRepo.findById(1).get();
-
-
-        return questionRepo.findByTest(test);
-
-
-
-
-    }
 
 
     public List<Test> findAllTests(){
@@ -52,7 +42,7 @@ public class TestService {
 
         Iterator<Answer> answers = answersFromStudent.getAnswers().listIterator();
         for(Question quest : answersFromStudent.getQuestions()){
-            if(questionRepo.findById(quest.getId()).equals(answers.next().getId())){
+            if(questionRepo.findById(quest.getId()).get().getCorrect_ans().getId().equals(answers.next().getId())){
                 result++;
             }
         }
@@ -65,7 +55,7 @@ public class TestService {
         Iterator<Answer> answers = answersFromStudent.getAnswers().listIterator();
         for(Question quest : answersFromStudent.getQuestions()){
             next = answers.next();
-            if(questionRepo.findById(quest.getId()).equals(next.getId())){
+            if(questionRepo.findById(quest.getId()).get().getCorrect_ans().getId().equals(next.getId())){
                 result.add(next);
             }
         }
@@ -74,8 +64,8 @@ public class TestService {
 
     public HashMap correctOfAll(AnswersFromStudent answersFromStudent){
         HashMap result = new HashMap<>();
-        result.put("all_quertions",questionRepo.findByTest(answersFromStudent.getTest()).size());
-        result.put("correct_answers",answersFromStudent.getSumOfPoints());
+        result.put("num_of_questions_answered",questionRepo.findByTest(answersFromStudent.getTest()).size());
+        result.put("num_of_correct_answers",answersFromStudent.getSumOfPoints());
         return result;
     }
 

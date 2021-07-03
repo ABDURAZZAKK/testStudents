@@ -22,15 +22,12 @@ public class TestController {
 
     @GetMapping
     public List<Test> listTests(){
-
-        System.out.print("size: ");
-
         return testService.findAllTests();
     }
 
 
     @GetMapping("{id}")
-    public List<Question> getOneTest(@PathVariable Test test){
+    public List<Question> getOneTest(@PathVariable("id") Test test){
         return testService.findOneTest(test);
     }
 
@@ -38,9 +35,11 @@ public class TestController {
     public HashMap createAnswerFromStudent(@RequestBody AnswersFromStudent answersFromStudent){
         HashMap response = new HashMap<>();
         answersFromStudent.setSumOfPoints(testService.scoring(answersFromStudent));
+        HashMap li = testService.correctOfAll(testService.answerFstSave(answersFromStudent));
 
-        response.put("correct_list", testService.correctList(answersFromStudent));
-        response.putAll(testService.correctOfAll(testService.answerFstSave(answersFromStudent)));
+        response.put("list_of_correct_answers", testService.correctList(answersFromStudent));
+        response.put("num_of_questions_answered", li.get("num_of_questions_answered"));
+        response.put("num_of_correct_answers", li.get("num_of_correct_answers"));
         return  response;
 
     }
